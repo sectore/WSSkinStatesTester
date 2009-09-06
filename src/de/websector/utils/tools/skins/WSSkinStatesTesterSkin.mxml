@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+*
+* Testing states of skin classes in Flex 4 using WSSkinStatesTester
+* 
+* @author	Jens Krause [www.websector.de]
+* @date		09/06/09
+* @see		http://www.websector.de/blog/2009/09/06/testing-states-of-skin-classes-in-flex-4-using-wsskinstatestester
+* 
+-->
+
+
+
+<s:Skin 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/halo"		
+		>
+
+	<fx:Metadata>
+		[HostComponent("de.websector.utils.tools.skins.WSSkinStatesTester")]
+	</fx:Metadata>
+	
+	
+	<!-- states -->	
+	<s:states>
+		<s:State name="normal" />
+	</s:states>
+	
+	
+	<!-- background -->
+	<s:Rect 
+		height="50" width="100%"
+		>
+		<s:fill>
+			<s:SolidColor color="#E5E5E5"/>
+		</s:fill>
+	</s:Rect>
+	<s:Rect 
+		y="50"
+		height="30" width="100%"
+		>
+		<s:fill>
+			<s:SolidColor color="#bfbfbf"/>
+		</s:fill>
+	</s:Rect>
+	<s:Line 
+		y="50" 
+		width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="#666666" />
+		</s:stroke>
+	</s:Line>
+	<s:Line		
+		y="80" 
+		width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="#666666" />
+		</s:stroke>
+	</s:Line>	
+	
+	<!-- views -->	
+	<s:RichText
+		id="headline"
+		y="15"
+		width="100%"
+		fontSize="21"
+		color="#333333"
+		fontWeight="normal"
+		textAlign="center"
+		>
+		<s:span fontStyle="italic" color="#0099CC">WS</s:span>SkinStatesTester
+	</s:RichText>
+	
+	<s:HGroup
+		horizontalCenter="0"
+		gap="10"
+		y="50" height="32"
+		verticalAlign="middle"
+		>
+<!--		
+		<s:Label
+			text="Component:"
+			/>		-->
+		
+		<mx:ComboBox
+			id="cbSkins"
+			width="200"
+			/>
+<!--		
+		<s:Label
+			text="State:"
+			/>-->
+		
+		<mx:ComboBox
+			id="cbStates"
+			width="200"
+			/>		
+	</s:HGroup>
+	
+	
+	<s:Group
+		id="skinHolder"
+		horizontalCenter="0"
+		verticalCenter="40"
+		/>
+	
+</s:Skin>

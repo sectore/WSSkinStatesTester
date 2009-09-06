@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<componentPackage>
+    <component id="WSSkinStatesTester" class="de.websector.utils.tools.skins.WSSkinStatesTester" />
+    <component id="WSSkinStatesTesterSkin" class="de.websector.utils.tools.skins.WSSkinStatesTesterSkin" />
+</componentPackage>
