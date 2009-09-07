@@ -79,7 +79,13 @@ package de.websector.utils.tools.skins
 		 * Versions number
 		 *  
 		 */	
-		public static const VERSION: String = "v.0.2";
+		protected static const VERSION: String = "v.0.2";
+		
+		/**
+		 * Project URL
+		 *  
+		 */	
+		protected static const URL: String = "http://www.websector.de/blog/2009/09/06/testing-states-of-skin-classes-in-flex-4-using-wsskinstatestester";
 		
 		/**
 		 *  Constructor 
@@ -357,6 +363,27 @@ package de.websector.utils.tools.skins
 		}
 		
 		
+		/**
+		 * Getter for project url 
+		 * @return 	String		URL of project page
+		 * 
+		 */		
+		public function get projectURL():String
+		{
+			return URL;
+		}
+		
+		
+		/**
+		 * Getter for current version 
+		 * @return 	String		current version
+		 * 
+		 */		
+		public function get version():String
+		{
+			return VERSION;
+		}
+		
 		//--------------------------------------------------------------------------
 		//
 		// helper methods
@@ -420,7 +447,7 @@ package de.websector.utils.tools.skins
 			return null;
 			
 		}
-		
+
 	
 	}
 }

@@ -69,8 +69,10 @@
 		color="#333333"
 		fontWeight="normal"
 		textAlign="center"
+		click="{ navigateToURL( new URLRequest( hostComponent.projectURL ) ) }"
+		buttonMode="true"
 		>
-		<s:span fontStyle="italic" color="#0099CC">WS</s:span>SkinStatesTester
+		<s:span fontStyle="italic" color="#0099CC">WS</s:span>SkinStatesTester  <s:span fontSize="11" color="#999999">{ hostComponent.version }</s:span>
 	</s:RichText>
 	
 	<s:HGroup
