@@ -26,6 +26,7 @@
 	<!-- states -->	
 	<s:states>
 		<s:State name="normal" />
+		<s:State name="disabled" />
 	</s:states>
 	
 	
@@ -81,22 +82,15 @@
 		y="50" height="32"
 		verticalAlign="middle"
 		>
-<!--		
-		<s:Label
-			text="Component:"
-			/>		-->
 		
-		<mx:ComboBox
-			id="cbSkins"
+		<s:DropDownList
+			id="ddlSkins"
 			width="200"
 			/>
-<!--		
-		<s:Label
-			text="State:"
-			/>-->
+
 		
-		<mx:ComboBox
-			id="cbStates"
+		<s:DropDownList
+			id="ddlStates"
 			width="200"
 			/>		
 	</s:HGroup>
@@ -105,7 +99,7 @@
 	<s:Group
 		id="skinHolder"
 		horizontalCenter="0"
-		verticalCenter="40"
+		verticalCenter="50"
 		/>
 	
 </s:Skin>

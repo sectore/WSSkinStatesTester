@@ -1,3 +1,9 @@
+/*	
+import flash.utils.describeType;
+import flash.utils.getDefinitionByName;
+import flash.utils.getQualifiedClassName;
+*/
+
 package de.websector.utils.tools.skins
 {
 	import flash.utils.describeType;
@@ -5,23 +11,26 @@ package de.websector.utils.tools.skins
 	import flash.utils.getQualifiedClassName;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.ComboBox;
+	import mx.collections.ArrayList;
 	import mx.events.ListEvent;
 	import mx.states.State;
+	import mx.styles.CSSStyleDeclaration;
 	
+	import spark.components.DropDownList;
 	import spark.components.Group;
 	import spark.components.SkinnableContainer;
 	import spark.components.supportClasses.Skin;
+	import spark.events.IndexChangeEvent;
 	
 	/**
-	* Testing states of skin classes in Flex 4 using WSSkinStatesTester
-	* 
-	* @author	Jens Krause [www.websector.de]
-	* @date		09/06/09
-	* @see		http://www.websector.de/blog/2009/09/06/testing-states-of-skin-classes-in-flex-4-using-wsskinstatestester
-	* 
-	*/
-		
+	 * Testing states of skin classes in Flex 4 using WSSkinStatesTester
+	 * 
+	 * @author	Jens Krause [www.websector.de]
+	 * @date	09/06/09
+	 * @see		http://www.websector.de/blog/2009/09/06/testing-states-of-skin-classes-in-flex-4-using-wsskinstatestester
+	 * 
+	 */
+	
 	public class WSSkinStatesTester extends SkinnableContainer
 	{
 		/**
@@ -46,28 +55,28 @@ package de.websector.utils.tools.skins
 		 * List of all skins
 		 * 
 		 */		
-		protected var _skins: ArrayCollection = new ArrayCollection();
+		protected var _skins: ArrayList = new ArrayList();
 		
 		/**
 		 * List of all skinStates of selected skin 
 		 * 
 		 */		
-		protected var skinStates: ArrayCollection = new ArrayCollection();	
-
+		protected var skinStates: ArrayList = new ArrayList();	
+		
 		/**
 		 * ComboBox for selecting skins, which is a required part of the skin
 		 *  
 		 */		
 		[SkinPart(required="true")]
-		public var cbSkins: ComboBox;
+		public var ddlSkins: DropDownList;
 		
 		/**
 		 * ComboBox for selecting states, which is a required part of the skin
 		 *  
 		 */			
 		[SkinPart(required="true")]
-		public var cbStates: ComboBox;
-
+		public var ddlStates: DropDownList;
+		
 		/**
 		 * Container to show selected skin
 		 *  
@@ -79,7 +88,7 @@ package de.websector.utils.tools.skins
 		 * Versions number
 		 *  
 		 */	
-		protected static const VERSION: String = "v.0.2";
+		protected static const VERSION: String = "v.0.3";
 		
 		/**
 		 * Project URL
@@ -95,11 +104,34 @@ package de.websector.utils.tools.skins
 		{
 			super();
 			
-			//
-			// default skin class
+			// initializeStyles();
 			if( getStyle('skinClass') == undefined )
 				setStyle("skinClass", de.websector.utils.tools.skins.WSSkinStatesTesterSkin );
 		}
+		
+		
+		
+		/**
+		 * Initialize a default style definitions
+		 *  
+		 */
+/*		private function initializeStyles():void
+		{
+			var css: CSSStyleDeclaration = styleManager.getStyleDeclaration("de.websector.utils.tools.skins.WSSkinStatesTester");
+			
+			if ( !css )
+			{
+				css = new CSSStyleDeclaration();
+				
+				css.defaultFactory = function():void
+				{
+					this.skinClass = WSSkinStatesTesterSkin;
+				}
+				
+				styleManager.setStyleDeclaration("de.websector.utils.tools.skins.WSSkinStatesTester", css, true);
+				
+			}
+		}*/
 		
 		//--------------------------------------------------------------------------
 		//
@@ -115,26 +147,30 @@ package de.websector.utils.tools.skins
 		{
 			super.commitProperties();
 			
-			if ( cbSkins != null && skinsChanged )
+			if ( ddlSkins != null && skinsChanged )
 			{				
-				cbSkins.dataProvider = _skins;
+				ddlSkins.dataProvider = _skins;
 				selectedSkin = _skins.getItemAt( 0 ) as Skin;
 				
 				skinsChanged = false;
 			}
 			
-			if ( cbStates != null && skinStatesChanged )
+			if ( ddlStates != null && skinStatesChanged )
 			{				
-				cbStates.dataProvider = skinStates;
-				
-				//
-				// FIXME: It seems to be a bug of Flex 4, 
-				// because the dropdown of ComboBox is not updated by itself 
-				if ( cbStates.dropdown != null )
-					cbStates.dropdown.dataProvider = skinStates;
-				
+				ddlStates.dataProvider = skinStates;
+				// workaround to update dropdown list, cbStates.selectedIndex = 0 won't work...
+				callLater( updateCbStates )
 				skinStatesChanged = false;
 			}
+		}
+		
+		/**
+		 * Just a helper method to udate selected item of the drop down for states 
+		 * 
+		 */		
+		protected function updateCbStates():void
+		{
+			ddlStates.selectedItem = skinStates.getItemAt( 0 ) as State;
 		}
 		
 		/**
@@ -145,35 +181,35 @@ package de.websector.utils.tools.skins
 		{
 			super.partAdded(partName, instance);
 			
-			if (instance == cbSkins )
+			if (instance == ddlSkins )
 			{
-				cbSkins.dataProvider = _skins;
-				cbSkins.labelFunction = getSkinClassName;
-				cbSkins.addEventListener( ListEvent.CHANGE, cbSkinsChangeHandler );
+				ddlSkins.dataProvider = _skins;
+				ddlSkins.labelFunction = getSkinClassName;
+				ddlSkins.addEventListener( ListEvent.CHANGE, cbSkinsChangeHandler );
 			}
-			else if (instance == cbStates )
+			else if (instance == ddlStates )
 			{
-				cbStates.dataProvider = skinStates;
-				cbStates.labelFunction = getStateName;
-				cbStates.addEventListener( ListEvent.CHANGE, cbStatesChangeHandler );
+				ddlStates.dataProvider = skinStates;
+				ddlStates.labelFunction = getStateName;
+				ddlStates.addEventListener( ListEvent.CHANGE, cbStatesChangeHandler );
 			}
 		}
 		
 		
-
-	    /**
-	     *  @inheritDoc
+		
+		/**
+		 *  @inheritDoc
 		 * 
 		 */		
 		override protected function partRemoved(partName:String, instance:Object):void
 		{
-			if (instance == cbSkins )
+			if (instance == ddlSkins )
 			{
-				cbSkins.removeEventListener( ListEvent.CHANGE, cbSkinsChangeHandler );
+				ddlSkins.removeEventListener( ListEvent.CHANGE, cbSkinsChangeHandler );
 			}
-			else if (instance == cbStates )
+			else if (instance == ddlStates )
 			{
-				cbStates.removeEventListener( ListEvent.CHANGE, cbStatesChangeHandler );
+				ddlStates.removeEventListener( ListEvent.CHANGE, cbStatesChangeHandler );
 			}
 			
 			super.partRemoved(partName, instance);
@@ -186,15 +222,15 @@ package de.websector.utils.tools.skins
 		// callbacks
 		//
 		//--------------------------------------------------------------------------
-
+		
 		/**
 		 * Callback for listening changes of selected skins
 		 * @param 	event		ListEvent dispatched by cbStates
 		 * 
 		 */			
-		protected function cbSkinsChangeHandler(event:ListEvent):void
+		protected function cbSkinsChangeHandler(event:IndexChangeEvent):void
 		{
-			selectedSkin = ComboBox( event.target ).selectedItem as Skin;
+			selectedSkin = DropDownList( event.target ).selectedItem as Skin;
 		}
 		
 		
@@ -203,9 +239,9 @@ package de.websector.utils.tools.skins
 		 * @param 	event		ListEvent dispatched by cbStates
 		 * 
 		 */		
-		protected function cbStatesChangeHandler(event:ListEvent):void
+		protected function cbStatesChangeHandler(event:IndexChangeEvent):void
 		{
-			selectedSkin.currentState = ComboBox( event.target ).selectedLabel;
+			selectedSkin.currentState = State( DropDownList( event.target ).selectedItem ).name;
 		}		
 		
 		
@@ -222,13 +258,13 @@ package de.websector.utils.tools.skins
 		protected function changeSkinStates():void
 		{
 			
-			skinStates = new ArrayCollection( selectedSkin.states.slice() );
-
+			skinStates = new ArrayList( selectedSkin.states.slice() );
+			
 			skinStatesChanged = true;
 			
 			invalidateProperties();
-
-	
+			
+			
 		}
 		
 		
@@ -253,14 +289,18 @@ package de.websector.utils.tools.skins
 			
 			if( skin.hasOwnProperty('hostComponent') && hostComponentName!= null )
 			{
-				var hostComponentClass: * = getDefinitionByName( hostComponentName ); 
-				
-				try{
-					skin["hostComponent"] = new hostComponentClass();		
-				}
-				catch( error: Error )
+				if( skin["hostComponent"] == null )
 				{
-					throw new Error("Unable to create a HostComponent using " + hostComponentName );
+					var hostComponentClass: * = getDefinitionByName( hostComponentName ); 
+					
+					try{
+						skin["hostComponent"] = new hostComponentClass();		
+					}
+					catch( error: Error )
+					{
+						throw new Error("Unable to create a HostComponent using " + hostComponentName );
+					}
+					
 				}
 			}
 			
@@ -289,14 +329,14 @@ package de.websector.utils.tools.skins
 			_skins.removeItemAt( _skins.getItemIndex( skin ) );
 		}
 		
-
-
+		
+		
 		//--------------------------------------------------------------------------
 		//
 		// getter / setter
 		//
 		//--------------------------------------------------------------------------
-
+		
 		/**
 		 * Getter for selected skin 
 		 * @return 	Skin		Selected Skin
@@ -328,9 +368,9 @@ package de.websector.utils.tools.skins
 				// get all skin states
 				changeSkinStates();
 				// set selected skin
-				if ( cbSkins.selectedItem != _selectedSkin )
-					cbSkins.selectedItem = _selectedSkin;	
-			
+				if ( ddlSkins.selectedItem !== _selectedSkin )
+					ddlSkins.selectedItem = _selectedSkin;	
+				
 			}
 			
 		}
@@ -346,7 +386,7 @@ package de.websector.utils.tools.skins
 		{
 			//
 			// clear old skins just creating an empty AC
-			_skins = new ArrayCollection();
+			_skins = new ArrayList();
 			// clear selectedSkin
 			selectedSkin = null;
 			
@@ -359,7 +399,7 @@ package de.websector.utils.tools.skins
 			skinsChanged = true;
 			
 			invalidateProperties();
-		
+			
 		}
 		
 		
@@ -447,7 +487,7 @@ package de.websector.utils.tools.skins
 			return null;
 			
 		}
-
-	
+		
+		
 	}
 }
